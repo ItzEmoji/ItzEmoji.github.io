@@ -1,0 +1,40 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import ProjectRow from "../../components/ProjectRow.astro";
+
+const projects = (await getCollection("projects")).sort(
+  (a, b) => a.data.order - b.data.order,
+);
+---
+
+<BaseLayout
+  title="Work"
+  description="Projects by Cyril Dettling — a Nix binary cache in Go, a declarative Neovim, a flake-managed NixOS system, and a custom installer image."
+>
+  <div class="shell">
+    <header class="page-head">
+      <p class="label">Work</p>
+      <h1 class="page-head__title">Things I've built</h1>
+      <p class="page-head__intro">
+        Four projects, all of them things I wanted to exist for my own machines
+        before they were anything else.
+      </p>
+    </header>
+
+    <div class="work">
+      {
+        projects.map((project) => (
+          <ProjectRow
+            index={project.data.order}
+            title={project.data.title}
+            summary={project.data.summary}
+            tech={project.data.tech}
+            year={project.data.year}
+            href={`/projects/${project.id}`}
+          />
+        ))
+      }
+    </div>
+  </div>
+</BaseLayout>

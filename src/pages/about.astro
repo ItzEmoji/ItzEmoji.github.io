@@ -1,0 +1,152 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { site } from "../../site.config";
+---
+
+<BaseLayout
+  title="About"
+  description="Cyril Dettling — sixteen, from Schwyz, apprentice platform engineer, and the person who put KDE Plasma on Linux From Scratch."
+>
+  <div class="shell">
+    <header class="page-head">
+      <p class="label">About</p>
+      <h1 class="page-head__title">
+        Sixteen, Swiss, and<br />far too invested in Linux
+      </h1>
+      <p class="page-head__intro">
+        I build systems that can be thrown away and rebuilt exactly, and I got
+        there by breaking a lot of systems that couldn't be.
+      </p>
+    </header>
+
+    <hr class="rule" />
+
+    <article class="entries">
+      <section class="entry">
+        <h2 class="label entry__label">Now</h2>
+        <div class="entry__body prose">
+          <p>
+            I'm sixteen and I live in {site.author.location}. I'm currently doing
+            my apprenticeship at the <strong>Kanton Schwyz</strong> as an
+            <em>Informatiker EFZ, Fachrichtung Plattformentwicklung</em> — the
+            platform engineering track, which in practice means servers,
+            networks, virtualisation, and the infrastructure that everything else
+            in an organisation quietly depends on.
+          </p>
+          <p>
+            It's the rare case of the thing I'd be doing anyway turning out to be
+            the thing I'm being trained in. Most of what I know, I learned by
+            wanting something to work on my own machines first.
+          </p>
+        </div>
+      </section>
+
+      <section class="entry">
+        <h2 class="label entry__label">The Linux part</h2>
+        <div class="entry__body prose">
+          <p>
+            I do unreasonable things with Linux. The clearest example: I built
+            <strong>Linux From Scratch</strong> — the whole thing, compiled from
+            source, no distribution underneath — and then, having reached the
+            point where a sensible person stops, installed <strong>KDE
+            Plasma</strong> on top of it.
+          </p>
+          <p>
+            If you haven't tried it: LFS gives you a system that boots to a
+            prompt and nothing else. Everything after that is yours to compile,
+            in the right order, with the right flags, against the right versions.
+            A full desktop environment is an enormous dependency graph to walk by
+            hand. That was rather the point.
+          </p>
+          <p>
+            It is not a practical way to run a computer, and I would not
+            recommend it as one. But nothing else teaches you what a Linux system
+            actually <em>is</em> quite as thoroughly as assembling one from
+            nothing and watching it come up.
+          </p>
+        </div>
+      </section>
+
+      <section class="entry">
+        <h2 class="label entry__label">Why Nix</h2>
+        <div class="entry__body prose">
+          <p>
+            Building everything by hand taught me the shape of the problem, and
+            the problem is that a hand-built system exists exactly once. Get it
+            working, and you still can't reproduce it. Change something, and you
+            can't reliably get back.
+          </p>
+          <p>
+            Nix fixes precisely that, which is why nearly everything I've built
+            since is Nix. My whole operating system is a
+            <a class="link" href="/projects/nixos-dotfiles">flake in a repository</a>.
+            My editor is
+            <a class="link" href="/projects/nvim">a flake too</a>, pinned down to
+            the plugin commit. My installer is
+            <a class="link" href="/projects/nixos-images">an image built in CI</a>.
+            And when all of that needed somewhere to cache its builds, I wrote
+            <a class="link" href="/projects/aeroflare">Aeroflare</a>.
+          </p>
+          <p>
+            There's a straight line from compiling a desktop environment by hand
+            to refusing to ever do it by hand again.
+          </p>
+        </div>
+      </section>
+
+      <section class="entry">
+        <h2 class="label entry__label">Elsewhere</h2>
+        <div class="entry__body prose">
+          <p>
+            Most of what I make is public on
+            <a class="link" href={`https://github.com/${site.author.github}`} rel="me noopener">GitHub</a>.
+            If you want to reach me, the
+            <a class="link" href="/contact">contact page</a> has every way to do it.
+          </p>
+        </div>
+      </section>
+    </article>
+  </div>
+</BaseLayout>
+
+<style>
+  .entries {
+    display: grid;
+  }
+
+  /* Label sits in its own column and stays put while the prose scrolls past. */
+  .entry {
+    display: grid;
+    grid-template-columns: 10rem minmax(0, 1fr);
+    gap: var(--space-l);
+    padding-block: var(--space-xl);
+    border-bottom: var(--rule) solid var(--rule-color);
+  }
+
+  .entry__label {
+    position: sticky;
+    top: var(--space-m);
+    align-self: start;
+    color: var(--fg-faint);
+  }
+
+  .entry__body {
+    max-width: 60ch;
+  }
+
+  .entry__body strong {
+    font-weight: 600;
+  }
+
+  @media (max-width: 48rem) {
+    .entry {
+      grid-template-columns: 1fr;
+      gap: var(--space-m);
+      padding-block: var(--space-l);
+    }
+
+    .entry__label {
+      position: static;
+    }
+  }
+</style>

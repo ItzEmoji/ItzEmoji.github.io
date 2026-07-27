@@ -1,0 +1,21 @@
+# build output
+dist/
+.astro/
+
+# dependencies
+node_modules/
+
+# runtime
+*.log
+.DS_Store
+
+# editor
+.vscode/
+.idea/
+
+# environment
+.env
+.env.production
+
+# agent workflow internals — never committed
+docs/superpowers/

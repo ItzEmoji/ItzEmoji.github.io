@@ -1,0 +1,76 @@
+---
+import "@fontsource-variable/inter";
+import "@fontsource-variable/jetbrains-mono";
+import "../styles/reset.css";
+import "../styles/tokens.css";
+import "../styles/base.css";
+
+import Nav from "../components/Nav.astro";
+import Footer from "../components/Footer.astro";
+import { site } from "../../site.config";
+
+interface Props {
+  title: string;
+  description?: string;
+  /** Set on the one page that shouldn't append the site name to its title. */
+  bareTitle?: boolean;
+}
+
+const { title, description = site.description, bareTitle = false } = Astro.props;
+
+const pageTitle = bareTitle ? title : `${title} — ${site.title}`;
+const canonical = new URL(Astro.url.pathname, Astro.site ?? site.url);
+---
+
+<!doctype html>
+<html lang={site.lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <meta name="author" content={site.author.name} />
+    <link rel="canonical" href={canonical} />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site.title} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content={site.locale} />
+    <meta name="twitter:card" content="summary" />
+
+    {/* Matches the resolved theme so browser UI doesn't fight the page. */}
+    <meta name="theme-color" content="#fbfaf7" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0d0d0c" media="(prefers-color-scheme: dark)" />
+
+    {/*
+      Blocking, and deliberately so: it must set data-theme before the first
+      paint, otherwise a dark-mode reader gets a white flash on every navigation.
+      Wrapped because localStorage throws outright in some privacy modes — in
+      that case we fall through to the CSS prefers-color-scheme default.
+    */}
+    <script is:inline>
+      (function () {
+        try {
+          var stored = localStorage.getItem("theme");
+          if (stored === "light" || stored === "dark") {
+            document.documentElement.setAttribute("data-theme", stored);
+          }
+        } catch (e) {
+          /* no stored preference available; CSS handles it */
+        }
+      })();
+    </script>
+  </head>
+
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <Nav />
+    <main id="main" tabindex="-1">
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>

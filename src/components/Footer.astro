@@ -1,0 +1,65 @@
+---
+import { site } from "../../site.config";
+
+const year = new Date().getFullYear();
+---
+
+<footer class="footer">
+  <div class="shell">
+    <hr class="rule" />
+    <div class="footer__inner">
+      <p class="label">
+        {site.author.name} — {site.author.location}
+      </p>
+      <p class="label">
+        <a class="footer__link" href="/contact">Get in touch</a>
+        <span class="footer__sep" aria-hidden="true">/</span>
+        <a
+          class="footer__link"
+          href={`https://github.com/${site.author.github}`}
+          rel="me noopener"
+        >
+          GitHub
+        </a>
+      </p>
+      <p class="label footer__year">© {year}</p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    margin-top: var(--space-3xl);
+  }
+
+  .footer__inner {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: var(--space-s) var(--space-m);
+    padding-block: var(--space-m) var(--space-l);
+  }
+
+  .footer__link {
+    transition: color var(--dur) var(--ease);
+  }
+
+  .footer__link:hover {
+    color: var(--accent);
+  }
+
+  .footer__sep {
+    margin-inline: 0.5rem;
+    color: var(--fg-faint);
+  }
+
+  .footer__year {
+    color: var(--fg-faint);
+  }
+
+  @media (max-width: 34rem) {
+    .footer__year {
+      order: 3;
+    }
+  }
+</style>
