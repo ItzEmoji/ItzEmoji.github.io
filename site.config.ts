@@ -79,6 +79,15 @@ export const site = {
     role: "Apprentice Platform Engineer",
     employer: "Kanton Schwyz",
     github: "ItzEmoji",
+    /*
+     * GitHub avatar, fetched and optimised at build time.
+     *
+     * This is the direct avatars URL rather than github.com/ItzEmoji.png,
+     * which is a 302 redirect that the image pipeline would have to follow.
+     * Change the avatar on GitHub and the next build picks it up; the numeric
+     * id is the account and does not change.
+     */
+    avatar: "https://avatars.githubusercontent.com/u/157407989?v=4",
   },
 
   /** Public key material lives off-site; this is a link, never a mirror. */

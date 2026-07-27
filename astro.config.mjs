@@ -20,6 +20,14 @@ export default defineConfig({
     }),
     sitemap(),
   ],
+  image: {
+    // Lets <Image> pull the GitHub avatar at build time. It is downloaded,
+    // converted to WebP and emitted into dist/, so visitors never request
+    // anything from GitHub. The cost is that a build now needs network access
+    // to this host.
+    domains: ["avatars.githubusercontent.com"],
+  },
+
   vite: {
     plugins: [tailwindcss()],
   },

@@ -1,7 +1,7 @@
 ---
 /*
  * Adapted from the Space Ahead theme by Siddhesh Thadeshwar (GPL-3.0).
- * The oversized wordmark bleeding off the bottom is the theme's idea.
+ * Theme credit lives in the README and LICENSE rather than in the page.
  */
 import { site } from "../../site.config";
 
@@ -25,44 +25,9 @@ const currentYear = new Date().getFullYear();
     </div>
   </div>
 
-  <div
-    class="flex min-w-full flex-col items-center justify-between gap-6 px-4 sm:flex-row"
-  >
+  <div class="flex min-w-full items-center justify-center px-4 pb-8">
     <p class="mb-0 text-balance">
       &copy; {currentYear} {site.author.name}
     </p>
-    <div class="flex flex-row items-center justify-end gap-4">
-      {
-        site.socials
-          .filter((social) => social.url)
-          .map((social) => (
-            <a
-              href={social.url}
-              title={social.name}
-              rel={social.verify ? "me noopener" : "noopener"}
-            >
-              {social.name}
-            </a>
-          ))
-      }
-    </div>
-  </div>
-
-  {/* GPL attribution for the theme this site is built on. */}
-  <p class="mb-0 px-4 text-center opacity-60">
-    Built on the <a
-      href="https://github.com/djsiddz/space-ahead"
-      rel="noopener">Space Ahead</a
-    > theme by Siddhesh Thadeshwar, GPL-3.0.
-  </p>
-
-  <div
-    class="sticky bottom-0 h-28 items-end overflow-clip text-center sm:h-18"
-  >
-    <span
-      class="text-6xl leading-none font-bold tracking-tighter text-black/15 sm:text-8xl dark:text-whitesmoke/15"
-    >
-      {site.author.name}
-    </span>
   </div>
 </footer>
