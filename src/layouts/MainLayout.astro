@@ -53,8 +53,9 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? site.url);
     <meta property="og:locale" content={site.locale} />
     <meta name="twitter:card" content="summary" />
 
-    <meta name="theme-color" content="#fdfcfb" media="(prefers-color-scheme: light)" />
-    <meta name="theme-color" content="#0b0b0b" media="(prefers-color-scheme: dark)" />
+    {/* Gruvbox light bg0 / dark bg0, so browser chrome matches the page. */}
+    <meta name="theme-color" content="#fbf1c7" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#282828" media="(prefers-color-scheme: dark)" />
 
     {/*
       Blocking, and deliberately so: it must put the theme class on <html>

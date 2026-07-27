@@ -1,17 +1,10 @@
-html.light .swup-transition-overlay {
-  background: linear-gradient(
-    60deg,
-    var(--color-space-sand),
-    var(--color-whitesmoke)
-  );
-}
-
-html.dark .swup-transition-overlay {
-  background: linear-gradient(
-    0deg,
-    var(--color-space-stone),
-    var(--color-black)
-  );
+/*
+ * The sweep that covers the screen during a page transition. Was a gradient
+ * fading to black; now a flat Gruvbox surface so the transition matches the
+ * page it is covering instead of flashing a colour that appears nowhere else.
+ */
+.swup-transition-overlay {
+  background: var(--surface-sunken);
 }
 
 body {

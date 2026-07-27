@@ -29,18 +29,18 @@ const { title, summary, year, tech, repo, link, status } = project.data;
 
     <div class="mx-auto max-w-2xl text-left">
       <dl
-        class="mb-8 flex flex-wrap gap-x-8 gap-y-2 border-y border-gray-500/40 py-4 text-xs"
+        class="mb-8 flex flex-wrap gap-x-8 gap-y-2 border-y border-line py-4 text-xs"
       >
         <div>
-          <dt class="opacity-60">Year</dt>
+          <dt class="text-ink-dim">Year</dt>
           <dd>{year}</dd>
         </div>
         <div>
-          <dt class="opacity-60">Status</dt>
+          <dt class="text-ink-dim">Status</dt>
           <dd>{status}</dd>
         </div>
         <div>
-          <dt class="opacity-60">Stack</dt>
+          <dt class="text-ink-dim">Stack</dt>
           <dd>{tech.join(", ")}</dd>
         </div>
       </dl>

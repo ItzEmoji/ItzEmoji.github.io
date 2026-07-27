@@ -10,21 +10,21 @@ const { title, summary, tech, year, status } = project.data;
 ---
 
 <article
-  class="w-full rounded-2xl border border-gray-500/40 px-5 py-4 text-left backdrop-blur-sm transition hover:border-gray-500/80"
+  class="w-full rounded-2xl border border-line px-5 py-4 text-left backdrop-blur-sm transition hover:border-line"
 >
   <div class="flex flex-wrap items-baseline justify-between gap-2">
     <h3 class="text-lg font-bold tracking-tight sm:text-xl">
       <a href={`/projects/${project.id}`}>{title}</a>
     </h3>
-    <span class="text-xs opacity-60">{year} &middot; {status}</span>
+    <span class="text-ink-dim text-xs">{year} &middot; {status}</span>
   </div>
 
-  <p class="mt-2 mb-3 text-sm opacity-80">{summary}</p>
+  <p class="mt-2 mb-3 text-sm">{summary}</p>
 
   <ul class="flex list-none flex-wrap gap-2 p-0" role="list">
     {
       tech.map((item) => (
-        <li class="rounded-full border border-gray-500/50 px-2 py-0 text-xs opacity-70">
+        <li class="text-ink-dim rounded-full border border-line px-2 py-0 text-xs">
           {item}
         </li>
       ))

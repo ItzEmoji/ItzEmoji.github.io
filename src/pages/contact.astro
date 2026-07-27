@@ -34,11 +34,11 @@ import { site, email } from "../../site.config";
       </p>
 
       <h2>Elsewhere</h2>
-      <dl class="mb-6 border-t border-gray-500/40">
+      <dl class="mb-6 border-t border-line">
         {
           site.socials.map((social) => (
-            <div class="flex flex-wrap gap-x-4 border-b border-gray-500/40 py-2">
-              <dt class="w-28 shrink-0 text-xs opacity-60 sm:text-sm">
+            <div class="flex flex-wrap gap-x-4 border-b border-line py-2">
+              <dt class="text-ink-dim w-28 shrink-0 text-xs sm:text-sm">
                 {social.name}
               </dt>
               <dd class="min-w-0 text-sm break-words">
@@ -51,7 +51,7 @@ import { site, email } from "../../site.config";
                   </a>
                 ) : (
                   /* No profile page to link to, so it renders as copyable text. */
-                  <span class="opacity-80">{social.handle}</span>
+                  <span class="text-ink-dim">{social.handle}</span>
                 )}
               </dd>
             </div>
