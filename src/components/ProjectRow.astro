@@ -71,6 +71,19 @@ const number = String(index).padStart(2, "0");
     line-height: 1.1;
     letter-spacing: var(--track-heading);
     font-weight: 600;
+    /*
+     * With no accent colour there's no hue to shift on hover, so the row
+     * signals itself by drawing an underline out from the left instead.
+     */
+    background-image: linear-gradient(currentColor, currentColor);
+    background-position: 0 100%;
+    background-repeat: no-repeat;
+    background-size: 0% 1px;
+    transition: background-size var(--dur) var(--ease);
+  }
+
+  .row:hover .row__title {
+    background-size: 100% 1px;
   }
 
   .row--compact .row__title {
