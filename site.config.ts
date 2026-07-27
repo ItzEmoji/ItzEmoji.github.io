@@ -75,7 +75,9 @@ export const site = {
     name: "Cyril Dettling",
     /** Split so the address is not sitting in the HTML as one scrapable string. */
     email: { user: "mail", domain: "itzemoji.com" },
-    location: "Schwyz, Switzerland",
+    /* Where he lives. Not to be confused with the employer below: the Kanton
+       Schwyz is the canton he is apprenticed to, not the town. */
+    location: "Lauerz, Switzerland",
     role: "Apprentice Platform Engineer",
     employer: "Kanton Schwyz",
     github: "ItzEmoji",
@@ -96,7 +98,7 @@ export const site = {
   socials,
 
   hero: {
-    eyebrow: "Schwyz, Switzerland",
+    eyebrow: "Lauerz, Switzerland",
     title: "Cyril Dettling",
     text: "I am 16. I am training as a platform engineer at the Kanton Schwyz. I build Linux systems with Nix, and I put KDE Plasma on Linux From Scratch once.",
     actions: [
