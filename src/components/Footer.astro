@@ -1,65 +1,33 @@
 ---
+/*
+ * Adapted from the Space Ahead theme by Siddhesh Thadeshwar (GPL-3.0).
+ * Theme credit lives in the README and LICENSE rather than in the page.
+ */
 import { site } from "../../site.config";
 
-const year = new Date().getFullYear();
+const currentYear = new Date().getFullYear();
 ---
 
-<footer class="footer">
-  <div class="shell">
-    <hr class="rule" />
-    <div class="footer__inner">
-      <p class="label">
-        {site.author.name} — {site.author.location}
-      </p>
-      <p class="label">
-        <a class="footer__link" href="/contact">Get in touch</a>
-        <span class="footer__sep" aria-hidden="true">/</span>
-        <a
-          class="footer__link"
-          href={`https://github.com/${site.author.github}`}
-          rel="me noopener"
-        >
-          GitHub
-        </a>
-      </p>
-      <p class="label footer__year">© {year}</p>
+<footer class="site-footer text-xs sm:text-sm">
+  <div
+    class="flex min-w-full flex-col items-center justify-center border-t border-line"
+  >
+    <div
+      class="flex flex-row items-center justify-around gap-2 pt-6 pb-3 text-center sm:justify-center sm:gap-6 sm:px-6"
+    >
+      {
+        /* Text kept tight against the tags: on its own line the anchor
+           renders as `<a> Home </a>` and the underline covers the spaces. */
+        site.footerNavLinks.map((link) => (
+          <a href={link.href} title={link.text}>{link.text}</a>
+        ))
+      }
     </div>
   </div>
+
+  <div class="flex min-w-full items-center justify-center px-4 pb-8">
+    <p class="mb-0 text-balance">
+      &copy; {currentYear} {site.author.name}
+    </p>
+  </div>
 </footer>
-
-<style>
-  .footer {
-    margin-top: var(--space-3xl);
-  }
-
-  .footer__inner {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    gap: var(--space-s) var(--space-m);
-    padding-block: var(--space-m) var(--space-l);
-  }
-
-  .footer__link {
-    transition: color var(--dur) var(--ease);
-  }
-
-  .footer__link:hover {
-    color: var(--accent);
-  }
-
-  .footer__sep {
-    margin-inline: 0.5rem;
-    color: var(--fg-faint);
-  }
-
-  .footer__year {
-    color: var(--fg-faint);
-  }
-
-  @media (max-width: 34rem) {
-    .footer__year {
-      order: 3;
-    }
-  }
-</style>

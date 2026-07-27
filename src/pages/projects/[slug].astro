@@ -1,7 +1,8 @@
 ---
 import type { CollectionEntry } from "astro:content";
 import { getCollection, render } from "astro:content";
-import BaseLayout from "../../layouts/BaseLayout.astro";
+import MainLayout from "../../layouts/MainLayout.astro";
+import Button from "../../components/Button.astro";
 
 export async function getStaticPaths() {
   const projects = await getCollection("projects");
@@ -17,137 +18,50 @@ interface Props {
 
 const { project } = Astro.props;
 const { Content } = await render(project);
-const { title, summary, year, tech, repo, link, status, order } = project.data;
-
-const number = String(order).padStart(2, "0");
+const { title, summary, year, tech, repo, link, status } = project.data;
 ---
 
-<BaseLayout title={title} description={summary}>
-  <div class="shell">
-    <header class="page-head project-head">
-      <p class="label">
-        <a class="back" href="/projects">← Work</a>
-        <span class="project-head__number">{number}</span>
-      </p>
-      <h1 class="page-head__title">{title}</h1>
-      <p class="page-head__intro">{summary}</p>
-    </header>
+<MainLayout activePage="work" title={title} description={summary}>
+  <div class="page-content">
+    <h1 class="pt-8">{title}</h1>
 
-    <hr class="rule" />
+    <p class="text-left">{summary}</p>
 
-    <div class="project">
-      <aside class="project__meta" aria-label="Project details">
-        <dl class="meta">
-          <div class="meta__row">
-            <dt class="label">Year</dt>
-            <dd class="mono">{year}</dd>
-          </div>
-          <div class="meta__row">
-            <dt class="label">Status</dt>
-            <dd class="mono">{status}</dd>
-          </div>
-          <div class="meta__row">
-            <dt class="label">Stack</dt>
-            <dd class="mono">{tech.join(", ")}</dd>
-          </div>
-          <div class="meta__row">
-            <dt class="label">Source</dt>
-            <dd><a class="link mono" href={repo} rel="noopener">GitHub ↗</a></dd>
-          </div>
-          {
-            link && (
-              <div class="meta__row">
-                <dt class="label">Link</dt>
-                <dd>
-                  <a class="link mono" href={link} rel="noopener">
-                    Visit ↗
-                  </a>
-                </dd>
-              </div>
-            )
-          }
-        </dl>
-      </aside>
+    <div class="text-left">
+      <dl
+        class="mb-8 flex flex-wrap gap-x-8 gap-y-2 border-y border-line py-4 text-xs"
+      >
+        <div>
+          <dt class="text-ink-dim">Year</dt>
+          <dd>{year}</dd>
+        </div>
+        <div>
+          <dt class="text-ink-dim">Status</dt>
+          <dd>{status}</dd>
+        </div>
+        <div>
+          <dt class="text-ink-dim">Stack</dt>
+          <dd>{tech.join(", ")}</dd>
+        </div>
+      </dl>
 
-      <article class="project__body prose">
+      <article class="prose-page">
         <Content />
       </article>
+
+      <div class="mt-10 flex flex-wrap gap-2 text-xs sm:text-base">
+        <Button href={repo} class="space-btn-filled" rel="noopener">
+          Source on GitHub
+        </Button>
+        {
+          link && (
+            <Button href={link} class="space-btn-outlined" rel="noopener">
+              Visit
+            </Button>
+          )
+        }
+        <Button href="/projects" class="space-btn-outlined">All work</Button>
+      </div>
     </div>
   </div>
-</BaseLayout>
-
-<style>
-  .project-head .label {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    gap: var(--space-m);
-  }
-
-  .back {
-    transition: color var(--dur) var(--ease);
-  }
-
-  .back:hover {
-    color: var(--accent);
-  }
-
-  .project-head__number {
-    color: var(--fg-faint);
-  }
-
-  .project {
-    display: grid;
-    grid-template-columns: 14rem minmax(0, 1fr);
-    gap: var(--space-xl);
-    padding-block: var(--space-xl);
-  }
-
-  .project__meta {
-    align-self: start;
-    position: sticky;
-    top: var(--space-m);
-  }
-
-  .meta {
-    margin: 0;
-  }
-
-  .meta__row {
-    display: grid;
-    gap: var(--space-2xs);
-    padding-block: var(--space-s);
-    border-bottom: var(--rule) solid var(--rule-color);
-  }
-
-  .meta__row:first-child {
-    padding-top: 0;
-  }
-
-  .meta__row dd {
-    margin: 0;
-    color: var(--fg-muted);
-    text-transform: capitalize;
-  }
-
-  .meta__row dd a {
-    text-transform: none;
-  }
-
-  /* The Markdown body opens without a heading, so the first line needs no top gap. */
-  .project__body > :first-child {
-    margin-top: 0;
-  }
-
-  @media (max-width: 52rem) {
-    .project {
-      grid-template-columns: 1fr;
-      gap: var(--space-l);
-      padding-block: var(--space-l);
-    }
-
-    .project__meta {
-      position: static;
-    }
-  }
-</style>
+</MainLayout>

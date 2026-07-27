@@ -1,6 +1,6 @@
 ---
 title: Aeroflare
-summary: A stateless Nix binary cache that stores packages as OCI images, so any container registry becomes a substituter.
+summary: A Nix binary cache that stores packages as OCI images, so any container registry works as a substituter.
 order: 1
 year: "2026"
 tech: ["Go", "Nix", "OCI"]
@@ -8,47 +8,41 @@ repo: "https://github.com/ItzEmoji/aeroflare"
 status: "active"
 ---
 
-Running a Nix binary cache normally means running infrastructure: a server, a store,
-somewhere to keep the metadata, and a bill at the end of the month. Aeroflare removes
-that. It bridges the Nix ecosystem and ordinary container registries — GitHub Container
-Registry, Docker Hub — and turns them into a binary substituter.
+Running a Nix binary cache normally means running a server, a store, and a
+metadata database. Aeroflare does not. It uses container registries instead, so
+GitHub Container Registry or Docker Hub becomes your substituter.
 
 ## How it works
 
-Each package becomes one OCI image. The NAR blobs are the image layers, and the
-`narinfo` metadata rides along as manifest annotations, which means there is no separate
-metadata store to keep in sync with the artifacts.
+One package is one OCI image. The NAR blobs are the layers. The `narinfo` goes
+in the manifest annotations. There is no separate metadata store to keep in sync.
 
-Images are tagged directly with the 32-character Nix store path hash. A cache lookup is
-therefore a single tag fetch rather than an index scan — O(1), and no index to build or
-invalidate.
+Images are tagged with the 32-character Nix store hash. A lookup is one tag
+fetch. No index to build, and nothing to invalidate.
 
-Nothing is kept locally. Aeroflare streams `.nar` blobs straight from the registry to the
-client and retains zero binary state of its own.
+Nothing is stored locally. Aeroflare streams `.nar` blobs from the registry to
+the client and keeps no state.
 
 ## Using it
 
-An interactive wizard handles the initial provisioning for GitHub, GitLab, and Cloudflare
-Worker deployments:
+A wizard sets up GitHub, GitLab, or Cloudflare Worker deployments:
 
 ```bash
 nix run github:ItzEmoji/aeroflare -- init
 ```
 
-Publishing accepts whatever you already have — a flake reference, a `./result` symlink, or
-a bare store path. It builds the target first if it hasn't been built yet:
+Push takes a flake reference, a `./result` symlink, or a store path. It builds
+first if it needs to:
 
 ```bash
 nix run github:ItzEmoji/aeroflare -- push ./result
 nix run github:ItzEmoji/aeroflare -- push nixpkgs#hello
 ```
 
-There is also a `run` wrapper that takes a build end to end, building and uploading in one
-step.
+There is also a `run` wrapper that builds and uploads in one step.
 
-## Why I built it
+## Why
 
-Everything else I work on is Nix, and all of it wants a cache. Paying for object storage
-to hold build artifacts felt absurd when every registry I already had access to was
-sitting there storing content-addressed blobs for a living. Writing it in Go kept the
-binary small and the deployment story dull, which is what you want from infrastructure.
+Everything I build is Nix and all of it needs a cache. Paying for object storage
+made no sense when registries already store content-addressed blobs for free. Go
+keeps the binary small and the deployment boring.

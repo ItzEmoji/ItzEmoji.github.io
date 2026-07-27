@@ -1,0 +1,292 @@
+/*
+ * Adapted from the Space Ahead theme by Siddhesh Thadeshwar (GPL-3.0).
+ * https://github.com/djsiddz/space-ahead
+ *
+ * Changes from the original:
+ *   - Kanit + Sigmar (loaded from Google Fonts) replaced with self-hosted
+ *     JetBrains Mono throughout.
+ *   - space-red / space-yellow hover accents removed; emphasis is monochrome,
+ *     carried by value and underline. See "accent" below to put hue back.
+ *   - Blog, tag, pagination and subscribe styling dropped.
+ */
+
+@import url("animate.css");
+@import "tailwindcss";
+
+/* Required so dark: modifiers work when the theme is toggled manually. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/*
+ * Gruvbox, by Pavel Pertsev. https://github.com/morhetz/gruvbox
+ * Dark is the "medium" contrast variant, light is its official companion.
+ */
+:root {
+  /* dark */
+  --gv-dark-bg-hard: #1d2021;
+  --gv-dark-bg: #282828;
+  --gv-dark-bg-soft: #32302f;
+  --gv-dark-bg1: #3c3836;
+  --gv-dark-bg2: #504945;
+  --gv-dark-bg3: #665c54;
+  --gv-dark-bg4: #7c6f64;
+  --gv-dark-fg: #ebdbb2;
+  --gv-dark-fg-bright: #fbf1c7;
+  --gv-dark-fg-dim: #bdae93;
+
+  /* light */
+  --gv-light-bg-hard: #f9f5d7;
+  --gv-light-bg: #fbf1c7;
+  --gv-light-bg-soft: #f2e5bc;
+  --gv-light-bg1: #ebdbb2;
+  --gv-light-bg2: #d5c4a1;
+  --gv-light-bg3: #bdae93;
+  --gv-light-bg4: #a89984;
+  --gv-light-fg: #3c3836;
+  --gv-light-fg-bright: #282828;
+  --gv-light-fg-dim: #665c54;
+
+  --gv-gray: #928374;
+
+  /*
+   * Accent.
+   *
+   * The theme ships #90393a red / #ffff85 yellow hovers. Those are removed:
+   * emphasis is value and underline only. Gruvbox's own accents are the
+   * obvious candidates if a hue ever goes back in — #fabd2f yellow,
+   * #fe8019 orange, #b8bb26 green.
+   */
+  --accent-light: currentColor;
+  --accent-dark: currentColor;
+}
+
+/*
+ * Semantic names, resolved per theme below. Registering them in @theme means
+ * `bg-surface`, `text-ink`, `border-line` etc. exist as normal utilities, and
+ * because each one resolves through a variable that the .light / .dark rules
+ * redefine, a single class works correctly in both themes.
+ */
+@theme {
+  --font-sans: "JetBrains Mono Variable", ui-monospace, "SF Mono", Menlo,
+    Consolas, monospace;
+  --font-mono: var(--font-sans);
+
+  --color-surface: var(--surface);
+  --color-surface-raised: var(--surface-raised);
+  --color-surface-sunken: var(--surface-sunken);
+  --color-ink: var(--ink);
+  --color-ink-bright: var(--ink-bright);
+  --color-ink-dim: var(--ink-dim);
+  --color-line: var(--line);
+  --color-gv-gray: var(--gv-gray);
+}
+
+/*
+ * Contrast, measured against WCAG rather than picked by eye:
+ *   dark  — ink 10.75:1, ink-dim 5.30:1, line 4.02:1
+ *   light — ink 10.22:1, ink-dim 5.74:1, line 3.24:1
+ * Text clears AA (4.5:1) and borders clear the 3:1 non-text minimum in both.
+ *
+ * --ink-dim exists so muted text is a real colour rather than opacity on the
+ * foreground: at 60% opacity the light theme dropped to 3.38:1, which fails.
+ * Gruvbox's neutral gray is the one value that clears 3:1 on both surfaces,
+ * so both themes share it for rules and borders.
+ */
+html.dark {
+  --surface: var(--gv-dark-bg);
+  --surface-raised: var(--gv-dark-bg1);
+  --surface-sunken: var(--gv-dark-bg-hard);
+  --ink: var(--gv-dark-fg);
+  --ink-bright: var(--gv-dark-fg-bright);
+  --ink-dim: #a89984;
+  --line: var(--gv-gray);
+}
+
+html.light {
+  --surface: var(--gv-light-bg);
+  --surface-raised: var(--gv-light-bg1);
+  --surface-sunken: var(--gv-light-bg-hard);
+  --ink: var(--gv-light-fg);
+  --ink-bright: var(--gv-light-fg-bright);
+  --ink-dim: #665c54;
+  --line: var(--gv-gray);
+}
+
+/* ---- Elements ----------------------------------------------------------- */
+
+html,
+body {
+  @apply mx-0 my-auto min-h-screen p-0 text-base;
+  overscroll-behavior: none;
+}
+
+/*
+ * The theme ships a gradient fading to pure black. Replaced with a flat
+ * Gruvbox surface: the fade to black was the part that looked wrong, and
+ * Gruvbox is designed as flat blocks of colour rather than washes.
+ * For a hint of the original depth, use:
+ *   background-image: linear-gradient(to bottom, var(--surface-raised), var(--surface));
+ */
+body {
+  @apply bg-surface text-ink;
+}
+
+/* Mono runs wide, so headings need harder negative tracking than the
+   original proportional face did. */
+h1 {
+  @apply py-4 text-2xl tracking-tighter sm:py-6 sm:text-6xl;
+}
+
+h2 {
+  @apply py-2 text-xl tracking-tight sm:py-4 sm:text-3xl;
+}
+
+p {
+  @apply mb-6;
+}
+
+img {
+  @apply h-auto max-w-full rounded-xl;
+}
+
+/* ---- Masthead ----------------------------------------------------------- */
+
+/*
+ * Masthead, main and footer share one width and one horizontal padding, so
+ * the nav pill, the content and the footer all sit on the same left and right
+ * edges. Previously the pill was flush at px-0 while the content sat in a
+ * narrower max-w-2xl box, and nothing lined up with anything.
+ */
+.masthead {
+  @apply sticky top-4 z-20 mr-auto ml-auto flex w-full max-w-3xl flex-col items-center justify-center px-4 py-0 text-base;
+}
+
+/* The glass pill. Layered shadows are the theme's, kept verbatim. */
+.masthead > nav {
+  @apply flex flex-row items-center justify-between gap-2 rounded-4xl px-5 py-2 text-xs backdrop-blur-3xl sm:gap-8 sm:py-3 sm:text-base;
+  box-shadow:
+    inset 0 0 0.5px 1px hsla(0, 0%, 100%, 0.075),
+    0 0 0 1px hsla(0, 0%, 0%, 0.05),
+    0 0.3px 0.4px hsla(0, 0%, 0%, 0.02),
+    0 0.9px 1.5px hsla(0, 0%, 0%, 0.045),
+    0 3.5px 6px hsla(0, 0%, 0%, 0.09);
+}
+
+.site-footer {
+  @apply mx-auto mt-12 flex w-full max-w-3xl flex-col flex-wrap items-center justify-center gap-4 px-4;
+}
+
+/* ---- Links & buttons ---------------------------------------------------- */
+
+a.button-link:not(:disabled),
+button.button-link:not(:disabled) {
+  @apply inline-flex cursor-pointer items-center justify-center rounded-full border px-6 py-2 leading-tight transition sm:px-8;
+}
+
+/* Inverted: Gruvbox foreground as the fill, surface as the label. */
+a.button-link.space-btn-filled:not(:disabled),
+button.button-link.space-btn-filled:not(:disabled) {
+  @apply border-ink bg-ink text-surface hover:bg-transparent hover:text-ink;
+}
+
+a.button-link.space-btn-outlined:not(:disabled),
+button.button-link.space-btn-outlined:not(:disabled) {
+  @apply border-ink bg-transparent text-ink hover:bg-ink hover:text-surface;
+}
+
+a:not(.button-link) {
+  @apply text-ink;
+}
+
+/* No hue to shift on hover, so links underline instead. */
+html a:not(.button-link):not(.no-underline):hover {
+  @apply underline decoration-1 underline-offset-4;
+}
+
+/* ---- Focus -------------------------------------------------------------- */
+
+:focus-visible {
+  @apply outline-2 outline-offset-4 outline-current;
+}
+
+.skip-link {
+  @apply bg-ink text-surface absolute top-2 left-2 z-50 -translate-y-24 rounded-full px-4 py-2 text-xs transition focus-visible:translate-y-0;
+}
+
+/*
+ * Left-aligned, not centred. The heading used to be centred over left-aligned
+ * body text in a narrower box, which is what read as "not properly centred":
+ * the column is centred on the page, the text inside it is not.
+ */
+.page-content {
+  @apply my-12 w-full text-left;
+}
+
+/* ---- Markdown bodies ---------------------------------------------------- */
+/* Lives here rather than in the page component: Tailwind 4 will not resolve
+   @apply inside a scoped Astro <style> without a @reference directive. */
+
+.prose-page h2 {
+  @apply pt-6;
+}
+
+.prose-page ul,
+.prose-page ol {
+  @apply mb-6 list-outside pl-5;
+}
+
+.prose-page ul {
+  @apply list-disc;
+}
+
+.prose-page ol {
+  @apply list-decimal;
+}
+
+.prose-page li {
+  @apply mb-1;
+}
+
+.prose-page code {
+  @apply bg-surface-raised rounded px-1 py-0.5 text-sm;
+}
+
+/* Always the hard dark background, in both themes: a code block reads as a
+   terminal, and Gruvbox is a terminal palette. */
+.prose-page pre {
+  @apply mb-6 overflow-x-auto rounded-xl p-4 text-sm;
+  background-color: var(--gv-dark-bg-hard);
+  color: var(--gv-dark-fg);
+}
+
+.prose-page pre code {
+  @apply bg-transparent p-0;
+}
+
+@keyframes cursor-blink {
+  0% {
+    opacity: 0;
+  }
+}
+
+.blinking {
+  animation: cursor-blink 1.2s steps(2) infinite;
+}
+
+/* The theme flipped alignment on portrait orientation to undo its own
+   centring. Alignment no longer changes with the viewport. */
+
+@media (max-width: 315px) {
+  section {
+    gap: 3rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

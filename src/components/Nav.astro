@@ -1,125 +1,138 @@
 ---
-import ThemeToggle from "./ThemeToggle.astro";
+/*
+ * Adapted from the Space Ahead theme by Siddhesh Thadeshwar (GPL-3.0).
+ * The glass pill is the theme's; the mobile menu is rewritten to be
+ * keyboard-operable and to null-check its elements.
+ */
+import ThemeSwitcher from "./ThemeSwitcher.astro";
+import NavLinks from "./NavLinks.astro";
 import { site } from "../../site.config";
 
-const path = Astro.url.pathname.replace(/\/+$/, "") || "/";
-
-/** "/projects/aeroflare" should still light up the Work item. */
-const isActive = (href: string) =>
-  href === "/" ? path === "/" : path === href || path.startsWith(`${href}/`);
-
-const [given, family] = site.author.name.split(" ");
+const { activePage } = Astro.props as { activePage: string };
 ---
 
 <header class="masthead">
-  <div class="shell masthead__inner">
-    <a class="wordmark" href="/" aria-label={`${site.author.name} — home`}>
-      <span class="wordmark__line">{given}</span>
-      <span class="wordmark__line">{family}</span>
+  <nav class="w-full font-light" aria-label="Primary">
+    <a href="/" class="no-underline hover:opacity-70">
+      <span class="text-base font-bold tracking-tighter sm:text-lg">
+        {site.author.name}
+      </span>
     </a>
 
-    <div class="masthead__right">
-      <nav aria-label="Primary">
-        <ul class="nav" role="list">
-          {
-            site.nav.map((item) => (
-              <li>
-                <a
-                  href={item.href}
-                  class:list={["nav__link", { "is-active": isActive(item.href) }]}
-                  aria-current={isActive(item.href) ? "page" : undefined}
-                >
-                  {item.label}
-                </a>
-              </li>
-            ))
-          }
-        </ul>
-      </nav>
-      <ThemeToggle />
+    <div class="hidden sm:flex sm:gap-8">
+      <NavLinks activePage={activePage} links={site.headerNavLinks} />
     </div>
+
+    <div class="flex items-center gap-2">
+      <ThemeSwitcher />
+      <button
+        id="menu-toggle"
+        type="button"
+        class="cursor-pointer rounded-full border border-line px-3 py-1 text-xs sm:hidden"
+        aria-expanded="false"
+        aria-controls="mobile-links"
+      >
+        Menu
+      </button>
+    </div>
+  </nav>
+
+  <div
+    id="mobile-links"
+    class="animated m-0 hidden w-full flex-col gap-2 text-right"
+  >
+    <NavLinks activePage={activePage} links={site.headerNavLinks} isMobileLink />
   </div>
-  <div class="shell"><hr class="rule" /></div>
 </header>
 
+<script is:inline>
+  /*
+   * Keep the current-page marker correct across swup navigations.
+   *
+   * The masthead sits outside swup's container, so it is never replaced and
+   * the server-rendered active classes would otherwise stay stuck on whichever
+   * page was loaded first. This re-derives them from the URL after each view.
+   */
+  (function () {
+    var ACTIVE = ["font-bold", "underline", "decoration-1", "underline-offset-4"];
+    var INACTIVE = ["text-ink-dim", "hover:text-ink"];
+
+    var trim = function (path) {
+      return path.length > 1 ? path.replace(/\/+$/, "") : path;
+    };
+
+    function syncActive() {
+      var here = trim(window.location.pathname);
+
+      document.querySelectorAll("[data-nav-link]").forEach(function (link) {
+        var href = trim(link.getAttribute("href") || "/");
+        // "/projects/aeroflare" should still mark Work as current.
+        var isActive =
+          href === "/" ? here === "/" : here === href || here.indexOf(href + "/") === 0;
+
+        link.classList.remove.apply(link.classList, isActive ? INACTIVE : ACTIVE);
+        link.classList.add.apply(link.classList, isActive ? ACTIVE : INACTIVE);
+
+        if (isActive) link.setAttribute("aria-current", "page");
+        else link.removeAttribute("aria-current");
+      });
+    }
+
+    syncActive();
+    document.addEventListener("swup:page:view", syncActive);
+  })();
+
+  (function () {
+    var toggle = document.getElementById("menu-toggle");
+    var panel = document.getElementById("mobile-links");
+    if (!toggle || !panel) return;
+
+    function setOpen(open) {
+      toggle.setAttribute("aria-expanded", String(open));
+      panel.classList.toggle("expanded", open);
+      panel.classList.toggle("hidden", !open);
+      panel.classList.toggle("slideInDown", open);
+      toggle.textContent = open ? "Close" : "Menu";
+    }
+
+    toggle.addEventListener("click", function () {
+      setOpen(toggle.getAttribute("aria-expanded") !== "true");
+    });
+
+    // Tapping a destination should dismiss the menu, not leave it hanging open.
+    panel.addEventListener("click", function (event) {
+      if (event.target && event.target.closest("a")) setOpen(false);
+    });
+
+    document.addEventListener("keydown", function (event) {
+      if (event.key === "Escape") setOpen(false);
+    });
+  })();
+</script>
+
 <style>
-  .masthead__inner {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: var(--space-m);
-    padding-block: var(--space-m);
-  }
-
-  .wordmark {
-    display: grid;
-    font-size: var(--step-0);
-    font-weight: 600;
-    letter-spacing: var(--track-label);
-    text-transform: uppercase;
-    line-height: 1.15;
-  }
-
-  .wordmark__line {
-    display: block;
-  }
-
-  /* Second line drops back so the mark reads as one object, not two words. */
-  .wordmark__line:last-child {
-    color: var(--fg-muted);
-    transition: color var(--dur) var(--ease);
-  }
-
-  .wordmark:hover .wordmark__line:last-child {
-    color: var(--fg);
-  }
-
-  .masthead__right {
-    display: flex;
-    align-items: flex-start;
-    gap: var(--space-m);
-  }
-
-  .nav {
-    display: grid;
-    grid-template-columns: repeat(2, auto);
-    gap: 0.15rem var(--space-m);
-    margin: 0;
-    padding: 0;
-    list-style: none;
-  }
-
-  .nav__link {
-    font-family: var(--font-mono);
-    font-size: var(--step--1);
-    letter-spacing: 0.04em;
-    color: var(--fg-muted);
-    transition: color var(--dur) var(--ease);
-  }
-
-  .nav__link:hover {
-    color: var(--fg);
-  }
-
-  .nav__link.is-active {
-    color: var(--accent);
-  }
-
-  @media (max-width: 34rem) {
-    .masthead__inner {
+  @media (orientation: portrait) {
+    #mobile-links.expanded {
+      align-items: end;
+      background-color: #0000007a;
+      backdrop-filter: blur(72px);
+      display: flex;
       flex-direction: column;
-      gap: var(--space-s);
+      gap: 0.5rem;
+      justify-content: end;
+      position: absolute;
+      z-index: 10;
+      opacity: 1;
+      padding: 1rem 2rem;
+      width: 100vw;
+      top: 0;
+      min-height: fit-content;
+      border-bottom-left-radius: 0.5rem;
+      border-bottom-right-radius: 0.5rem;
     }
 
-    .masthead__right {
-      width: 100%;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .nav {
-      grid-template-columns: repeat(4, auto);
-      gap: var(--space-s);
+    :global(html.light) #mobile-links.expanded {
+      background-color: #ffffff6a;
     }
   }
 </style>
