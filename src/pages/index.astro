@@ -1,7 +1,8 @@
 ---
 import { getCollection } from "astro:content";
-import BaseLayout from "../layouts/BaseLayout.astro";
-import ProjectRow from "../components/ProjectRow.astro";
+import MainLayout from "../layouts/MainLayout.astro";
+import ProjectCard from "../components/ProjectCard.astro";
+import Button from "../components/Button.astro";
 import { site } from "../../site.config";
 
 const projects = (await getCollection("projects")).sort(
@@ -9,132 +10,49 @@ const projects = (await getCollection("projects")).sort(
 );
 ---
 
-<BaseLayout title={site.title} bareTitle>
-  <section class="shell hero">
-    <p class="label hero__eyebrow">
-      {site.author.location} — {site.author.role}
-    </p>
+<MainLayout activePage="home" title={site.title} bareTitle>
+  <section
+    class="my-12 flex w-full flex-col gap-6 px-4 sm:flex-row sm:items-center sm:justify-between"
+  >
+    <div class="w-full">
+      <span
+        class="tag rounded-full border border-gray-500 px-2 py-0 text-xs font-light"
+      >
+        {site.hero.eyebrow}
+      </span>
 
-    <h1 class="display hero__name">
-      Cyril<br />Dettling
-    </h1>
+      <h1 class="text-balance leading-tight sm:pt-0">{site.hero.title}</h1>
 
-    <p class="hero__statement">
-      I'm sixteen, training as a platform engineer at the
-      <strong>{site.author.employer}</strong>, and I build declarative Linux
-      infrastructure with Nix — caches, images, and systems that rebuild
-      themselves the same way every time.
-    </p>
-  </section>
+      <p class="text-balance text-xs sm:text-base">{site.hero.text}</p>
 
-  <section class="shell section" aria-labelledby="work-heading">
-    <div class="section__head">
-      <h2 id="work-heading" class="label">Selected work</h2>
-      <a class="section__more label" href="/projects">All work →</a>
-    </div>
-
-    <div class="work">
-      {
-        projects.map((project) => (
-          <ProjectRow
-            index={project.data.order}
-            title={project.data.title}
-            summary={project.data.summary}
-            tech={project.data.tech}
-            year={project.data.year}
-            href={`/projects/${project.id}`}
-          />
-        ))
-      }
+      <div
+        class="mt-3 flex flex-wrap items-center gap-x-2 gap-y-4 text-xs sm:mt-10 sm:text-base"
+      >
+        {
+          site.hero.actions.map((action, index) => (
+            <Button
+              href={action.href}
+              class={index === 0 ? "space-btn-filled" : "space-btn-outlined"}
+            >
+              {action.text}
+            </Button>
+          ))
+        }
+      </div>
     </div>
   </section>
 
-  <section class="shell section" aria-labelledby="now-heading">
-    <h2 id="now-heading" class="label">Currently</h2>
-    <div class="now">
-      <p class="now__text">
-        Working through my apprenticeship as an <em>Informatiker EFZ,
-        Fachrichtung Plattformentwicklung</em>, and spending most of what's left
-        of the week on <a class="link" href="/projects/aeroflare">Aeroflare</a>.
-      </p>
-      <p class="now__aside muted">
-        Somewhere along the way I built Linux From Scratch and then put KDE
-        Plasma on top of it. <a class="link" href="/about">That story's here.</a>
-      </p>
-    </div>
-  </section>
-</BaseLayout>
+  <div class="page-content">
+    <section id="work" class="flex w-full flex-col items-center justify-center">
+      <h2 class="text-balance pt-0 pb-8">Work</h2>
 
-<style>
-  .hero {
-    padding-block: var(--space-2xl) var(--space-xl);
-  }
+      <div class="flex max-w-full flex-col gap-6 text-left">
+        {projects.map((project) => <ProjectCard project={project} />)}
+      </div>
 
-  .hero__eyebrow {
-    margin-bottom: var(--space-m);
-  }
-
-  /*
-   * The name is the largest thing on the site and the reason the whole design
-   * works — set tight, set once, and given room on every side.
-   */
-  .hero__name {
-    margin-bottom: var(--space-l);
-  }
-
-  .hero__statement {
-    max-width: 44ch;
-    font-size: var(--step-1);
-    line-height: 1.45;
-    letter-spacing: -0.012em;
-    color: var(--fg-muted);
-  }
-
-  .hero__statement strong {
-    color: var(--fg);
-    font-weight: 500;
-  }
-
-  .section__head {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    gap: var(--space-m);
-    margin-bottom: var(--space-m);
-  }
-
-  .section__more {
-    transition: color var(--dur) var(--ease);
-  }
-
-  .section__more:hover {
-    color: var(--accent);
-  }
-
-  .now {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    gap: var(--space-l);
-    margin-top: var(--space-m);
-    padding-top: var(--space-m);
-    border-top: var(--rule) solid var(--rule-color);
-  }
-
-  .now__text {
-    font-size: var(--step-1);
-    line-height: 1.45;
-    letter-spacing: -0.01em;
-    max-width: 38ch;
-  }
-
-  .now__aside {
-    max-width: 38ch;
-  }
-
-  @media (max-width: 48rem) {
-    .now {
-      grid-template-columns: 1fr;
-      gap: var(--space-m);
-    }
-  }
-</style>
+      <Button href="/projects" class="space-btn-filled mt-8">
+        All work
+      </Button>
+    </section>
+  </div>
+</MainLayout>

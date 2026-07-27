@@ -1,0 +1,221 @@
+/*
+ * Adapted from the Space Ahead theme by Siddhesh Thadeshwar (GPL-3.0).
+ * https://github.com/djsiddz/space-ahead
+ *
+ * Changes from the original:
+ *   - Kanit + Sigmar (loaded from Google Fonts) replaced with self-hosted
+ *     JetBrains Mono throughout.
+ *   - space-red / space-yellow hover accents removed; emphasis is monochrome,
+ *     carried by value and underline. See "accent" below to put hue back.
+ *   - Blog, tag, pagination and subscribe styling dropped.
+ */
+
+@import url("animate.css");
+@import "tailwindcss";
+
+/* Required so dark: modifiers work when the theme is toggled manually. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  --space-sand: #e2d1c3;
+  --space-stone: #434343;
+  --space-cream: #fdfcfb;
+
+  /*
+   * Accent.
+   *
+   * The theme ships #90393a red / #ffff85 yellow hovers. Those are removed:
+   * emphasis is value and underline only. To reinstate a hue, set these two
+   * to a colour and nothing else needs to change.
+   */
+  --accent-light: currentColor;
+  --accent-dark: currentColor;
+}
+
+@theme {
+  --font-sans: "JetBrains Mono Variable", ui-monospace, "SF Mono", Menlo,
+    Consolas, monospace;
+  --font-mono: var(--font-sans);
+  --color-space-sand: var(--space-sand);
+  --color-space-stone: var(--space-stone);
+  --color-whitesmoke: whitesmoke;
+}
+
+/* ---- Elements ----------------------------------------------------------- */
+
+html,
+body {
+  @apply mx-0 my-auto min-h-screen p-0 text-base;
+  overscroll-behavior: none;
+}
+
+/* The gradient is the theme's signature; both directions kept as shipped. */
+html.dark body {
+  background-image: linear-gradient(
+    to bottom,
+    var(--space-stone) 0%,
+    black 100%
+  );
+  @apply bg-black bg-cover bg-no-repeat bg-fixed text-whitesmoke;
+}
+
+html.light body {
+  background-image: linear-gradient(
+    180deg,
+    var(--space-cream) 0%,
+    var(--space-sand) 100%
+  );
+  @apply bg-space-sand bg-cover bg-no-repeat bg-fixed text-black;
+}
+
+/* Mono runs wide, so headings need harder negative tracking than the
+   original proportional face did. */
+h1 {
+  @apply py-4 text-2xl tracking-tighter sm:py-6 sm:text-6xl;
+}
+
+h2 {
+  @apply py-2 text-xl tracking-tight sm:py-4 sm:text-3xl;
+}
+
+p {
+  @apply mb-6;
+}
+
+img {
+  @apply h-auto max-w-full rounded-xl;
+}
+
+/* ---- Masthead ----------------------------------------------------------- */
+
+.masthead {
+  @apply sticky top-4 z-20 mr-auto ml-auto flex w-full max-w-3xl flex-col items-center justify-center px-0 py-0 text-base;
+}
+
+/* The glass pill. Layered shadows are the theme's, kept verbatim. */
+.masthead > nav {
+  @apply flex flex-row items-center justify-between gap-2 rounded-4xl px-5 py-2 text-xs backdrop-blur-3xl sm:gap-8 sm:py-3 sm:text-base;
+  box-shadow:
+    inset 0 0 0.5px 1px hsla(0, 0%, 100%, 0.075),
+    0 0 0 1px hsla(0, 0%, 0%, 0.05),
+    0 0.3px 0.4px hsla(0, 0%, 0%, 0.02),
+    0 0.9px 1.5px hsla(0, 0%, 0%, 0.045),
+    0 3.5px 6px hsla(0, 0%, 0%, 0.09);
+}
+
+.site-footer {
+  @apply mx-auto mt-12 flex w-full max-w-3xl flex-col flex-wrap items-center justify-center gap-4;
+}
+
+/* ---- Links & buttons ---------------------------------------------------- */
+
+a.button-link:not(:disabled),
+button.button-link:not(:disabled) {
+  @apply inline-flex cursor-pointer items-center justify-center rounded-full border px-6 py-2 leading-tight transition sm:px-8;
+}
+
+a.button-link.space-btn-filled:not(:disabled),
+button.button-link.space-btn-filled:not(:disabled) {
+  @apply border-black bg-black text-whitesmoke hover:bg-transparent hover:text-black dark:border-whitesmoke dark:bg-whitesmoke dark:text-black dark:hover:bg-transparent dark:hover:text-whitesmoke;
+}
+
+a.button-link.space-btn-outlined:not(:disabled),
+button.button-link.space-btn-outlined:not(:disabled) {
+  @apply border-black bg-transparent text-black hover:bg-black hover:text-whitesmoke dark:border-whitesmoke dark:text-whitesmoke dark:hover:bg-whitesmoke dark:hover:text-black;
+}
+
+html.dark a:not(.button-link) {
+  @apply text-whitesmoke;
+}
+
+html.light a:not(.button-link) {
+  @apply text-black;
+}
+
+/* No hue to shift on hover, so links underline instead. */
+html a:not(.button-link):not(.no-underline):hover {
+  @apply underline decoration-1 underline-offset-4;
+}
+
+/* ---- Focus -------------------------------------------------------------- */
+
+:focus-visible {
+  @apply outline-2 outline-offset-4 outline-current;
+}
+
+.skip-link {
+  @apply absolute top-2 left-2 z-50 -translate-y-24 rounded-full bg-black px-4 py-2 text-xs text-whitesmoke transition focus-visible:translate-y-0 dark:bg-whitesmoke dark:text-black;
+}
+
+.page-content {
+  @apply my-12 w-full px-4 text-center;
+}
+
+/* ---- Markdown bodies ---------------------------------------------------- */
+/* Lives here rather than in the page component: Tailwind 4 will not resolve
+   @apply inside a scoped Astro <style> without a @reference directive. */
+
+.prose-page h2 {
+  @apply pt-6;
+}
+
+.prose-page ul,
+.prose-page ol {
+  @apply mb-6 list-outside pl-5;
+}
+
+.prose-page ul {
+  @apply list-disc;
+}
+
+.prose-page ol {
+  @apply list-decimal;
+}
+
+.prose-page li {
+  @apply mb-1;
+}
+
+.prose-page code {
+  @apply rounded bg-black/10 px-1 py-0.5 text-sm dark:bg-white/10;
+}
+
+.prose-page pre {
+  @apply mb-6 overflow-x-auto rounded-xl bg-black/80 p-4 text-sm text-whitesmoke dark:bg-black/60;
+}
+
+.prose-page pre code {
+  @apply bg-transparent p-0;
+}
+
+@keyframes cursor-blink {
+  0% {
+    opacity: 0;
+  }
+}
+
+.blinking {
+  animation: cursor-blink 1.2s steps(2) infinite;
+}
+
+@media (orientation: portrait) {
+  .page-content {
+    text-align: left;
+  }
+}
+
+@media (max-width: 315px) {
+  section {
+    gap: 3rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

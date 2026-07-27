@@ -1,5 +1,8 @@
-import { defineCollection, z } from "astro:content";
+import { defineCollection } from "astro:content";
 import { glob } from "astro/loaders";
+// Imported directly rather than from astro:content, whose re-exported `z` is
+// deprecated in Astro 7.
+import { z } from "zod";
 
 /**
  * Adding a project is one Markdown file in src/content/projects/.
@@ -10,15 +13,15 @@ const projects = defineCollection({
   loader: glob({ pattern: "**/*.md", base: "./src/content/projects" }),
   schema: z.object({
     title: z.string(),
-    /** One line. Shown in the index rows — keep it under ~120 characters. */
+    /** One line. Shown on the project cards — keep it under ~160 characters. */
     summary: z.string().max(160),
-    /** Controls index order. 1 is the flagship. */
+    /** Controls order on the index. 1 is the flagship. */
     order: z.number().int().positive(),
     year: z.string(),
     tech: z.array(z.string()).nonempty(),
-    repo: z.string().url(),
+    repo: z.url(),
     /** Optional live site or docs, shown alongside the repo link. */
-    link: z.string().url().optional(),
+    link: z.url().optional(),
     status: z.enum(["active", "maintained", "archived"]).default("active"),
   }),
 });

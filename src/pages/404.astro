@@ -1,53 +1,21 @@
 ---
-import BaseLayout from "../layouts/BaseLayout.astro";
+import MainLayout from "../layouts/MainLayout.astro";
+import Button from "../components/Button.astro";
 ---
 
-<BaseLayout
-  title="Not found"
-  description="That page doesn't exist."
->
-  <div class="shell notfound">
-    <p class="label">Error 404</p>
-    <h1 class="h1 notfound__title">This page<br />doesn't exist</h1>
-    <p class="notfound__text muted">
-      Nothing here — the link is wrong, or it used to be something and isn't
-      anymore.
+<MainLayout activePage="" title="Not found" description="That page does not exist.">
+  <div class="page-content">
+    <h1 class="pt-8">404<span class="blinking">_</span></h1>
+
+    <p class="mx-auto max-w-2xl text-left">
+      This page does not exist. The link is wrong, or it used to be something
+      and is not anymore.
     </p>
-    <p class="notfound__links label">
-      <a class="notfound__link" href="/">Index</a>
-      <span aria-hidden="true">/</span>
-      <a class="notfound__link" href="/projects">Work</a>
-      <span aria-hidden="true">/</span>
-      <a class="notfound__link" href="/contact">Contact</a>
-    </p>
+
+    <div class="flex flex-wrap gap-2 text-xs sm:justify-center sm:text-base">
+      <Button href="/" class="space-btn-filled">Home</Button>
+      <Button href="/projects" class="space-btn-outlined">Work</Button>
+      <Button href="/contact" class="space-btn-outlined">Contact</Button>
+    </div>
   </div>
-</BaseLayout>
-
-<style>
-  .notfound {
-    padding-block: var(--space-3xl);
-  }
-
-  .notfound__title {
-    margin-top: var(--space-m);
-  }
-
-  .notfound__text {
-    margin-top: var(--space-m);
-    max-width: 38ch;
-  }
-
-  .notfound__links {
-    display: flex;
-    gap: var(--space-s);
-    margin-top: var(--space-l);
-  }
-
-  .notfound__link {
-    transition: color var(--dur) var(--ease);
-  }
-
-  .notfound__link:hover {
-    color: var(--accent);
-  }
-</style>
+</MainLayout>

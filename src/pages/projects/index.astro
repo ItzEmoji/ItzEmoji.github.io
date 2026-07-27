@@ -1,40 +1,27 @@
 ---
 import { getCollection } from "astro:content";
-import BaseLayout from "../../layouts/BaseLayout.astro";
-import ProjectRow from "../../components/ProjectRow.astro";
+import MainLayout from "../../layouts/MainLayout.astro";
+import ProjectCard from "../../components/ProjectCard.astro";
 
 const projects = (await getCollection("projects")).sort(
   (a, b) => a.data.order - b.data.order,
 );
 ---
 
-<BaseLayout
+<MainLayout
+  activePage="work"
   title="Work"
-  description="Projects by Cyril Dettling — a Nix binary cache in Go, a declarative Neovim, a flake-managed NixOS system, and a custom installer image."
+  description="Projects by Cyril Dettling. A Nix binary cache in Go, a declarative Neovim, a flake-managed NixOS system, and a custom installer image."
 >
-  <div class="shell">
-    <header class="page-head">
-      <p class="label">Work</p>
-      <h1 class="page-head__title">Things I've built</h1>
-      <p class="page-head__intro">
-        Four projects, all of them things I wanted to exist for my own machines
-        before they were anything else.
-      </p>
-    </header>
+  <div class="page-content">
+    <h1 class="pt-8">Work</h1>
 
-    <div class="work">
-      {
-        projects.map((project) => (
-          <ProjectRow
-            index={project.data.order}
-            title={project.data.title}
-            summary={project.data.summary}
-            tech={project.data.tech}
-            year={project.data.year}
-            href={`/projects/${project.id}`}
-          />
-        ))
-      }
+    <p class="mx-auto max-w-2xl text-left">
+      Four projects. I built all of them for my own machines first.
+    </p>
+
+    <div class="mx-auto flex max-w-2xl flex-col gap-6 text-left">
+      {projects.map((project) => <ProjectCard project={project} />)}
     </div>
   </div>
-</BaseLayout>
+</MainLayout>

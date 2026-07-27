@@ -1,0 +1,34 @@
+---
+import type { NavLink } from "../../site.config";
+
+const {
+  activePage,
+  links,
+  isMobileLink = false,
+} = Astro.props as {
+  activePage: string;
+  links: readonly NavLink[];
+  isMobileLink?: boolean;
+};
+---
+
+{
+  links.map((link) => {
+    const isActive = activePage === link.text.toLowerCase();
+    return (
+      <a
+        href={link.href}
+        aria-current={isActive ? "page" : undefined}
+        class:list={[
+          isMobileLink ? "close-menu" : "",
+          /* No accent hue, so the current page is marked by weight and rule. */
+          isActive
+            ? "font-bold underline decoration-1 underline-offset-4"
+            : "opacity-70 hover:opacity-100",
+        ]}
+      >
+        {link.text}
+      </a>
+    );
+  })
+}

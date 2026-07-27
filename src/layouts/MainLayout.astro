@@ -1,0 +1,94 @@
+---
+/*
+ * Adapted from the Space Ahead theme by Siddhesh Thadeshwar (GPL-3.0).
+ * https://github.com/djsiddz/space-ahead
+ *
+ * Changed from the original: fonts are self-hosted rather than pulled from
+ * Google Fonts, the subscribe form and RSS link are gone, and the document
+ * uses real landmarks (the original nested <nav> and <footer> inside <main>).
+ */
+import "@fontsource-variable/jetbrains-mono";
+import "../styles/global.css";
+
+import Nav from "../components/Nav.astro";
+import Footer from "../components/Footer.astro";
+import { site } from "../../site.config";
+
+interface Props {
+  title: string;
+  description?: string;
+  activePage: string;
+  /** Set on the home page, which shouldn't append the site name to its title. */
+  bareTitle?: boolean;
+}
+
+const {
+  title,
+  description = site.description,
+  activePage,
+  bareTitle = false,
+} = Astro.props;
+
+const pageTitle = bareTitle ? title : `${title} | ${site.title}`;
+const canonical = new URL(Astro.url.pathname, Astro.site ?? site.url);
+---
+
+<!doctype html>
+<html lang={site.lang} class="antialiased break-words">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <meta name="author" content={site.author.name} />
+    <meta name="generator" content={Astro.generator} />
+    <link rel="canonical" href={canonical} />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site.title} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content={site.locale} />
+    <meta name="twitter:card" content="summary" />
+
+    <meta name="theme-color" content="#fdfcfb" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0b0b0b" media="(prefers-color-scheme: dark)" />
+
+    {/*
+      Blocking, and deliberately so: it must put the theme class on <html>
+      before first paint, otherwise a dark-mode reader gets a flash of the
+      light gradient on every navigation. Wrapped because localStorage throws
+      outright in some privacy modes.
+    */}
+    <script is:inline>
+      (function () {
+        var theme;
+        try {
+          theme = localStorage.getItem("theme");
+        } catch (e) {
+          /* storage unavailable; fall through to the OS preference */
+        }
+        if (theme !== "light" && theme !== "dark") {
+          theme = window.matchMedia("(prefers-color-scheme: dark)").matches
+            ? "dark"
+            : "light";
+        }
+        document.documentElement.classList.add(theme);
+        document.documentElement.classList.remove(
+          theme === "dark" ? "light" : "dark",
+        );
+      })();
+    </script>
+  </head>
+
+  <body>
+    <a class="skip-link" href="#swup">Skip to content</a>
+    <Nav activePage={activePage} />
+    <main id="swup" class="mx-auto min-h-screen max-w-3xl transition-fade">
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>

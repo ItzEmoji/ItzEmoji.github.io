@@ -1,65 +1,68 @@
 ---
+/*
+ * Adapted from the Space Ahead theme by Siddhesh Thadeshwar (GPL-3.0).
+ * The oversized wordmark bleeding off the bottom is the theme's idea.
+ */
 import { site } from "../../site.config";
 
-const year = new Date().getFullYear();
+const currentYear = new Date().getFullYear();
 ---
 
-<footer class="footer">
-  <div class="shell">
-    <hr class="rule" />
-    <div class="footer__inner">
-      <p class="label">
-        {site.author.name} — {site.author.location}
-      </p>
-      <p class="label">
-        <a class="footer__link" href="/contact">Get in touch</a>
-        <span class="footer__sep" aria-hidden="true">/</span>
-        <a
-          class="footer__link"
-          href={`https://github.com/${site.author.github}`}
-          rel="me noopener"
-        >
-          GitHub
-        </a>
-      </p>
-      <p class="label footer__year">© {year}</p>
+<footer class="site-footer text-xs sm:text-sm">
+  <div
+    class="flex min-w-full flex-col items-center justify-center border-t border-gray-500/50"
+  >
+    <div
+      class="flex flex-row items-center justify-around gap-2 pt-6 pb-3 text-center sm:justify-center sm:gap-6 sm:px-6"
+    >
+      {
+        site.footerNavLinks.map((link) => (
+          <a href={link.href} title={link.text}>
+            {link.text}
+          </a>
+        ))
+      }
     </div>
   </div>
+
+  <div
+    class="flex min-w-full flex-col items-center justify-between gap-6 px-4 sm:flex-row"
+  >
+    <p class="mb-0 text-balance">
+      &copy; {currentYear} {site.author.name}
+    </p>
+    <div class="flex flex-row items-center justify-end gap-4">
+      {
+        site.socials
+          .filter((social) => social.url)
+          .map((social) => (
+            <a
+              href={social.url}
+              title={social.name}
+              rel={social.verify ? "me noopener" : "noopener"}
+            >
+              {social.name}
+            </a>
+          ))
+      }
+    </div>
+  </div>
+
+  {/* GPL attribution for the theme this site is built on. */}
+  <p class="mb-0 px-4 text-center opacity-60">
+    Built on the <a
+      href="https://github.com/djsiddz/space-ahead"
+      rel="noopener">Space Ahead</a
+    > theme by Siddhesh Thadeshwar, GPL-3.0.
+  </p>
+
+  <div
+    class="sticky bottom-0 h-28 items-end overflow-clip text-center sm:h-18"
+  >
+    <span
+      class="text-6xl leading-none font-bold tracking-tighter text-black/15 sm:text-8xl dark:text-whitesmoke/15"
+    >
+      {site.author.name}
+    </span>
+  </div>
 </footer>
-
-<style>
-  .footer {
-    margin-top: var(--space-3xl);
-  }
-
-  .footer__inner {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    gap: var(--space-s) var(--space-m);
-    padding-block: var(--space-m) var(--space-l);
-  }
-
-  .footer__link {
-    transition: color var(--dur) var(--ease);
-  }
-
-  .footer__link:hover {
-    color: var(--accent);
-  }
-
-  .footer__sep {
-    margin-inline: 0.5rem;
-    color: var(--fg-faint);
-  }
-
-  .footer__year {
-    color: var(--fg-faint);
-  }
-
-  @media (max-width: 34rem) {
-    .footer__year {
-      order: 3;
-    }
-  }
-</style>
