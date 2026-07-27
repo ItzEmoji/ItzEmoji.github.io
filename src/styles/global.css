@@ -150,8 +150,14 @@ img {
 
 /* ---- Masthead ----------------------------------------------------------- */
 
+/*
+ * Masthead, main and footer share one width and one horizontal padding, so
+ * the nav pill, the content and the footer all sit on the same left and right
+ * edges. Previously the pill was flush at px-0 while the content sat in a
+ * narrower max-w-2xl box, and nothing lined up with anything.
+ */
 .masthead {
-  @apply sticky top-4 z-20 mr-auto ml-auto flex w-full max-w-3xl flex-col items-center justify-center px-0 py-0 text-base;
+  @apply sticky top-4 z-20 mr-auto ml-auto flex w-full max-w-3xl flex-col items-center justify-center px-4 py-0 text-base;
 }
 
 /* The glass pill. Layered shadows are the theme's, kept verbatim. */
@@ -166,7 +172,7 @@ img {
 }
 
 .site-footer {
-  @apply mx-auto mt-12 flex w-full max-w-3xl flex-col flex-wrap items-center justify-center gap-4;
+  @apply mx-auto mt-12 flex w-full max-w-3xl flex-col flex-wrap items-center justify-center gap-4 px-4;
 }
 
 /* ---- Links & buttons ---------------------------------------------------- */
@@ -206,8 +212,13 @@ html a:not(.button-link):not(.no-underline):hover {
   @apply bg-ink text-surface absolute top-2 left-2 z-50 -translate-y-24 rounded-full px-4 py-2 text-xs transition focus-visible:translate-y-0;
 }
 
+/*
+ * Left-aligned, not centred. The heading used to be centred over left-aligned
+ * body text in a narrower box, which is what read as "not properly centred":
+ * the column is centred on the page, the text inside it is not.
+ */
 .page-content {
-  @apply my-12 w-full px-4 text-center;
+  @apply my-12 w-full text-left;
 }
 
 /* ---- Markdown bodies ---------------------------------------------------- */
@@ -261,11 +272,8 @@ html a:not(.button-link):not(.no-underline):hover {
   animation: cursor-blink 1.2s steps(2) infinite;
 }
 
-@media (orientation: portrait) {
-  .page-content {
-    text-align: left;
-  }
-}
+/* The theme flipped alignment on portrait orientation to undo its own
+   centring. Alignment no longer changes with the viewport. */
 
 @media (max-width: 315px) {
   section {

@@ -13,7 +13,7 @@ const projects = (await getCollection("projects")).sort(
 
 <MainLayout activePage="home" title={site.title} bareTitle>
   <section
-    class="my-12 flex w-full flex-col gap-6 px-4 sm:flex-row sm:items-center sm:justify-between"
+    class="my-12 flex w-full flex-col gap-6 sm:flex-row sm:items-center sm:justify-between"
   >
     <div class="w-full sm:max-w-lg">
       <span
@@ -55,16 +55,14 @@ const projects = (await getCollection("projects")).sort(
   </section>
 
   <div class="page-content">
-    <section id="work" class="flex w-full flex-col items-center justify-center">
+    <section id="work" class="flex w-full flex-col items-start">
       <h2 class="text-balance pt-0 pb-8">Work</h2>
 
-      <div class="flex max-w-full flex-col gap-6 text-left">
+      <div class="flex w-full flex-col gap-6 text-left">
         {projects.map((project) => <ProjectCard project={project} />)}
       </div>
 
-      <Button href="/projects" class="space-btn-filled mt-8">
-        All work
-      </Button>
+      <Button href="/projects" class="space-btn-filled mt-8">All work</Button>
     </section>
   </div>
 </MainLayout>

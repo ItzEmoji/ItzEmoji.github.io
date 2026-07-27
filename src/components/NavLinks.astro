@@ -16,19 +16,26 @@ const {
   links.map((link) => {
     const isActive = activePage === link.text.toLowerCase();
     return (
+      /*
+       * The text sits tight against the tags on purpose. On its own line it
+       * renders as `<a> Home </a>`, and the hover underline then runs across
+       * the surrounding spaces.
+       *
+       * Classes are also applied client-side by Nav.astro: the nav lives
+       * outside swup's container, so it is not replaced on navigation. These
+       * server-rendered ones cover the first load and the no-JavaScript case.
+       */
       <a
+        data-nav-link
         href={link.href}
         aria-current={isActive ? "page" : undefined}
         class:list={[
           isMobileLink ? "close-menu" : "",
-          /* No accent hue, so the current page is marked by weight and rule. */
           isActive
             ? "font-bold underline decoration-1 underline-offset-4"
             : "text-ink-dim hover:text-ink",
         ]}
-      >
-        {link.text}
-      </a>
+      >{link.text}</a>
     );
   })
 }

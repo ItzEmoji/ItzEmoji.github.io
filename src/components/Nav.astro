@@ -46,6 +46,42 @@ const { activePage } = Astro.props as { activePage: string };
 </header>
 
 <script is:inline>
+  /*
+   * Keep the current-page marker correct across swup navigations.
+   *
+   * The masthead sits outside swup's container, so it is never replaced and
+   * the server-rendered active classes would otherwise stay stuck on whichever
+   * page was loaded first. This re-derives them from the URL after each view.
+   */
+  (function () {
+    var ACTIVE = ["font-bold", "underline", "decoration-1", "underline-offset-4"];
+    var INACTIVE = ["text-ink-dim", "hover:text-ink"];
+
+    var trim = function (path) {
+      return path.length > 1 ? path.replace(/\/+$/, "") : path;
+    };
+
+    function syncActive() {
+      var here = trim(window.location.pathname);
+
+      document.querySelectorAll("[data-nav-link]").forEach(function (link) {
+        var href = trim(link.getAttribute("href") || "/");
+        // "/projects/aeroflare" should still mark Work as current.
+        var isActive =
+          href === "/" ? here === "/" : here === href || here.indexOf(href + "/") === 0;
+
+        link.classList.remove.apply(link.classList, isActive ? INACTIVE : ACTIVE);
+        link.classList.add.apply(link.classList, isActive ? ACTIVE : INACTIVE);
+
+        if (isActive) link.setAttribute("aria-current", "page");
+        else link.removeAttribute("aria-current");
+      });
+    }
+
+    syncActive();
+    document.addEventListener("swup:page:view", syncActive);
+  })();
+
   (function () {
     var toggle = document.getElementById("menu-toggle");
     var panel = document.getElementById("mobile-links");

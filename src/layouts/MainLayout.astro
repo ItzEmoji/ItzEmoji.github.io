@@ -87,7 +87,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? site.url);
   <body>
     <a class="skip-link" href="#swup">Skip to content</a>
     <Nav activePage={activePage} />
-    <main id="swup" class="mx-auto min-h-screen max-w-3xl transition-fade">
+    <main id="swup" class="mx-auto min-h-screen max-w-3xl px-4 transition-fade">
       <slot />
     </main>
     <Footer />

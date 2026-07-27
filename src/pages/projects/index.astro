@@ -16,11 +16,11 @@ const projects = (await getCollection("projects")).sort(
   <div class="page-content">
     <h1 class="pt-8">Work</h1>
 
-    <p class="mx-auto max-w-2xl text-left">
+    <p class="text-left">
       Four projects. I built all of them for my own machines first.
     </p>
 
-    <div class="mx-auto flex max-w-2xl flex-col gap-6 text-left">
+    <div class="flex flex-col gap-6 text-left">
       {projects.map((project) => <ProjectCard project={project} />)}
     </div>
   </div>
